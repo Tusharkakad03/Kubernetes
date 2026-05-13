@@ -1,0 +1,43 @@
+kind: Pod
+apiVersion: b1
+metadata:
+  name: nginx-pod
+  namespace: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPorts: 80
+
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+
+    startupProbe:
+      httpGet:
+        path: /healthz
+        port: 80
+      failureThreshold: 30
+      periodSeconds: 10
+
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 80
+      initianDelaySeconds: 3
+      periodSeconds: 3
+      timeoutSeconds: 5
+      failureThreshold: 3
+
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: 80
+      periodSeconds: 5
+
+
